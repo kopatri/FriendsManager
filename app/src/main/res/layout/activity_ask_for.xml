@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.abertay.friendsmanager.AskForActivity"
+    android:orientation="vertical"
+    android:background="@drawable/general_background"
+    android:id="@+id/askForActivityLayout">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/ask_for_activity"
+        android:contentDescription="@string/logo"
+        android:id="@+id/imageAskForActivity" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/imageAskForActivity"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/name"
+        android:labelFor="@+id/spinner"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:id="@+id/nameStatic"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageAskForActivity"
+        android:layout_alignTop="@id/nameStatic"
+        android:layout_alignBottom="@id/nameStatic"
+        android:layout_toEndOf="@+id/nameStatic"
+        android:id="@+id/spinner"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nameStatic"
+        android:layout_margin="10dp"
+        android:text="@string/mobile_phone_hint"
+        android:background="@drawable/oval_style"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:id="@+id/telephoneNumber"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/ask_your_friend_with_n_a_personal_text_message_n_for_an_activity"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:layout_below="@id/telephoneNumber"
+        android:background="@drawable/oval_style"
+        android:id="@+id/message"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/oval_style"
+        android:gravity="center"
+        android:text="@string/send_sms"
+        android:textSize="30sp"
+        android:id="@+id/sendSMS"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/ic_arrow_back_black_48dp"
+        android:contentDescription="@string/back_button"
+        android:id="@+id/backButton"/>
+
+</RelativeLayout>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/general_background"
+    tools:context="com.abertay.friendsmanager.DetailFriendView"
+    android:id="@+id/layoutDetailFriendView">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:src="@drawable/detail_view"
+        android:contentDescription="@string/logo"
+        android:id="@+id/addNewFriend"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addNewFriend"
+        android:layout_margin="10dp"
+        android:textSize="25sp"
+        android:background="@drawable/oval_style"
+        android:gravity="center"
+        android:text="@string/name_only"
+        android:textColor="#000000"
+        android:id="@+id/name"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_margin="10dp"
+        android:textSize="25sp"
+        android:background="@drawable/oval_style"
+        android:gravity="center"
+        android:text="@string/birthday"
+        android:textColor="#000000"
+        android:id="@+id/birthday"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/birthday"
+        android:layout_margin="10dp"
+        android:textSize="25sp"
+        android:background="@drawable/oval_style"
+        android:gravity="center"
+        android:text="@string/mobile_phone_hint"
+        android:textColor="#000000"
+        android:id="@+id/mobilePhone"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mobilePhone"
+        android:layout_margin="10dp"
+        android:textSize="25sp"
+        android:background="@drawable/oval_style"
+        android:gravity="center"
+        android:text="@string/email_hint"
+        android:textColor="#000000"
+        android:id="@+id/email"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:background="@drawable/ic_delete_black_75dp"
+        android:contentDescription="@string/delete"
+        android:id="@+id/deleteFriend"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/ic_arrow_back_black_48dp"
+        android:contentDescription="@string/back_button"
+        android:id="@+id/backButton"/>
+
+</RelativeLayout>

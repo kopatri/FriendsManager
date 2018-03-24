@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/general_background"
+    android:orientation="vertical"
+    tools:context="com.abertay.friendsmanager.MainActivity"
+    android:id="@+id/mainLayout">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logo"
+        android:gravity="center"
+        android:contentDescription="@string/logo"
+        android:id="@+id/logo"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo"
+        android:layout_margin="10dp"
+        android:textSize="25sp"
+        android:textColor="#000000"
+        android:background="@drawable/oval_style"
+        android:gravity="center"
+        android:text="@string/latest_friend"
+        android:id="@+id/latestFriend" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/latestFriend"
+        android:layout_margin="10dp"
+        android:textSize="25sp"
+        android:textColor="#000000"
+        android:background="@drawable/oval_style"
+        android:gravity="center"
+        android:text="@string/last_deleted_friend"
+        android:id="@+id/lastDeletedFriend" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lastDeletedFriend"
+        android:layout_margin="10dp"
+        android:textSize="25sp"
+        android:textColor="#000000"
+        android:background="@drawable/oval_style"
+        android:gravity="center"
+        android:text="@string/total_friends"
+        android:id="@+id/totalFriends" />
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/totalFriends"
+        android:layout_margin="10dp"
+        android:textSize="25sp"
+        android:background="@drawable/oval_style"
+        android:gravity="center"
+        android:text="@string/ask_for_activity"
+        android:id="@+id/askForActivity" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/askForActivity"
+        android:layout_margin="10dp"
+        android:textSize="25sp"
+        android:background="@drawable/oval_style"
+        android:gravity="center"
+        android:text="@string/friendslist"
+        android:id="@+id/showFriends" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:background="@drawable/ic_add_circle_outline_black_75dp"
+        android:contentDescription="@string/back_button"
+        android:id="@+id/addFriends"/>
+
+</RelativeLayout>

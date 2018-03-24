@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/general_background"
+    tools:context="com.abertay.friendsmanager.AllFriends"
+    android:id="@+id/allFriendslayout">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:background="@drawable/all_friends"
+        android:contentDescription="@string/logo"
+        android:id="@+id/image" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/back_button"
+        android:background="@drawable/ic_arrow_back_black_48dp"
+        android:id="@+id/backButton"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/backButton"
+        android:layout_alignBottom="@id/backButton"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/total_friends_list"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:id="@+id/totalFriends"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/totalFriends"
+        android:layout_below="@id/image"
+        android:foregroundGravity="center"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:id="@+id/listView"/>
+
+</RelativeLayout>
