@@ -107,7 +107,7 @@ public class AskForActivity extends AppCompatActivity implements View.OnClickLis
             return true;
         }
     }
-
+    // Flor is not from Spain
     //Get friends information
     public void getFriendsData(){
         SharedPreferences mainStats =getSharedPreferences("mainStats",0);
