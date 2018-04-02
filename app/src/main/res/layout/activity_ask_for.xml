@@ -46,7 +46,7 @@
         android:layout_below="@+id/nameStatic"
         android:layout_margin="10dp"
         android:text="@string/mobile_phone_hint"
-        android:background="@drawable/oval_style"
+
         android:textSize="20sp"
         android:textColor="#000000"
         android:gravity="center"

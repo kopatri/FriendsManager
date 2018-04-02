@@ -3,9 +3,9 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="username">Username</string>
-    <string name="latest_friend">Latest Friend</string>
-    <string name="last_deleted_friend">Last Deleted Friend</string>
-    <string name="total_friends">Total Friends</string>
+    <string name="latest_friend">Latest Friend:</string>
+    <string name="last_deleted_friend">Last Deleted Friend:</string>
+    <string name="total_friends">Total Friends:</string>
     <string name="ask_for_activity">Ask for Activity</string>
     <string name="friendslist">Friendslist</string>
     <string name="name">Name:</string>

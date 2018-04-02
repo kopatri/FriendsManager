@@ -68,22 +68,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setMainStats() {
        SharedPreferences mainStats = getSharedPreferences("mainStats",0);
 
-        String localCounter ="Total friends\n"+numberOfFriends();
+        String localCounter ="Total friends:\n"+numberOfFriends();
         totalFriends.setText(localCounter);
 
         String latestFriendLogicCheck = mainStats.getString(SAVED_LATEST_FRIEND,"No friends in friendslist");
         String lastDeletedFriendLogicCheck = mainStats.getString(SAVED_LAST_DELETED_FRIEND,"No friends in friendslist");
 
-        latestFriend.setText(String.format("Latest friend\n%s", mainStats.getString(SAVED_LATEST_FRIEND, "No friends in friendslist")));
+        latestFriend.setText(String.format("Latest friend:\n%s", mainStats.getString(SAVED_LATEST_FRIEND, "No friends in friendslist")));
 
-        lastDeletedFriend.setText(String.format("Last deleted friend\n%s", mainStats.getString(SAVED_LAST_DELETED_FRIEND, "No friends in friendslist")));
+        lastDeletedFriend.setText(String.format("Last deleted friend:\n%s", mainStats.getString(SAVED_LAST_DELETED_FRIEND, "No friends in friendslist")));
 
         //Logic Checks
         //more important logic checks at the end fo this Method
         //latest friends get deleted by user
         if(lastDeletedFriendLogicCheck.equals(latestFriendLogicCheck)){
             String delete = "You deleted your latest friend";
-            latestFriend.setText(String.format("Latest friend\n%s", delete));
+            latestFriend.setText(String.format("Latest friend:\n%s", delete));
             SharedPreferences.Editor editor = mainStats.edit();
             editor.putString(SAVED_LATEST_FRIEND,delete);
             editor.apply();
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         //Added friends, deleted all, no more friends
         if(numberOfFriends()==0){
-            latestFriend.setText("Latest friend\n No friends in friendslist");
+            latestFriend.setText("Latest friend:\n No friends in friendslist");
         }
     }
 

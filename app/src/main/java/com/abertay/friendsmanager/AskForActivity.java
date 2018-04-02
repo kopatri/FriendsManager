@@ -65,13 +65,13 @@ public class AskForActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentNumber=friendsMobilePhone[position];
-                telephoneNumber.setText(String.format("Mobile Phone Number\n%s", currentNumber));
+                telephoneNumber.setText(String.format("Mobile Phone Number: \n%s", currentNumber));
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 currentNumber=friendsMobilePhone[0];
-                telephoneNumber.setText(String.format("Mobile Phone Number\n%s", currentNumber));
+                telephoneNumber.setText(String.format("Mobile Phone Number: \n%s", currentNumber));
             }
         });
         requestPermissions();
