@@ -19,6 +19,7 @@ public class FriendsDatabaseHelper extends SQLiteOpenHelper{
     private static final String FRIENDS_TABLE_NAME="friends";
     private static final String[] COLUMN_NAMES={"Name","Birthday","MobilePhone","Email"};
 
+
     private static final String FRIENDS_TABLE_CREATE =
             "CREATE TABLE " + FRIENDS_TABLE_NAME + " (" +
                     COLUMN_NAMES[0] + " TEXT, "+
@@ -66,6 +67,7 @@ public class FriendsDatabaseHelper extends SQLiteOpenHelper{
 
         Cursor result = db.query(FRIENDS_TABLE_NAME,null,null,null,
                 null,null,null);
+
         ArrayList<Friend> friends = new ArrayList<Friend>();
         for(int i=0;i<result.getCount();i++){
             result.moveToPosition(i);
@@ -81,5 +83,21 @@ public class FriendsDatabaseHelper extends SQLiteOpenHelper{
         String whereClause = "Name = ? AND Birthday = ? AND MobilePhone = ? AND Email = ?";
         String[] whereArgs ={f.name,f.birthday,f.mobilePhone,f.email};  //Where Args are same, will be deleted
         return  db.delete(FRIENDS_TABLE_NAME,whereClause,whereArgs);
+    }
+
+    public void commitChanges(Friend oldData, Friend newData){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues actualValues = new ContentValues();
+        actualValues.put("Name", newData.name);
+        actualValues.put("Birthday", newData.birthday);
+        actualValues.put("MobilePhone", newData.mobilePhone);
+        actualValues.put("Email", newData.email);
+
+        String whereClause = "Name = '" + oldData.name + "' AND " +
+                            "Birthday = '" +oldData.birthday + "' AND " +
+                            "MobilePhone = '" +oldData.mobilePhone + "' AND " +
+                            " Email = '" + oldData.email+"'";
+
+        db.update(FRIENDS_TABLE_NAME, actualValues,whereClause ,null);
     }
 }

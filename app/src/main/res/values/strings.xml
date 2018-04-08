@@ -13,7 +13,7 @@
     <string name="ask_your_friend_with_n_a_personal_text_message_n_for_an_activity">Ask your friend with\n a personal text message\n for an Activity</string>
     <string name="send_sms">Send SMS</string>
     <string name="name_only">Name</string>
-    <string name="birthday">Birthday</string>
+    <string name="birthday">Birthday d/m/yyyy</string>
     <string name="total_friends_list">Total friends:</string>
     <string name="_0">0</string>
     <string name="email_hint">Email</string>
@@ -21,4 +21,6 @@
     <string name="back_button">back button</string>
     <string name="add_friends">add friends</string>
     <string name="delete">delete</string>
+    <string name="send_email">send Email</string>
+    <string name="contact_information">contact information</string>
 </resources>

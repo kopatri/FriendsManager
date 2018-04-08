@@ -2,6 +2,7 @@ package com.abertay.friendsmanager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import static com.abertay.friendsmanager.MainActivity.SAVED_TOTAL_FRIENDS;
 
 public class AllFriends extends AppCompatActivity implements View.OnClickListener {
@@ -35,9 +38,8 @@ public class AllFriends extends AppCompatActivity implements View.OnClickListene
         updateTotalFriends();
         updateListView();
 
-       backButton.setOnClickListener(this);
+        backButton.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View v) {
@@ -57,7 +59,18 @@ public class AllFriends extends AppCompatActivity implements View.OnClickListene
 
     public void updateListView(){
         updateTotalFriends();
-        friends =  friendsDatabaseHelper.getFriendsData();
+
+        try {
+            friends = new AllFriendsTask().execute().get();
+        } catch (InterruptedException e) {
+            Toast.makeText(getApplicationContext(),"Data transfer was interrupted: "+e,Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            Toast.makeText(getApplicationContext(),"Error: "+e,Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+
+
         String[] friendsName = new String[localCounter];
         for(int i=0; i<localCounter; i++){
             friendsName[i]=friends.get(i).name;
@@ -73,6 +86,9 @@ public class AllFriends extends AppCompatActivity implements View.OnClickListene
                 startActivity(goToDetailFriendView);
             }
         });
+
+
+
     }
 
     @Override
@@ -80,4 +96,23 @@ public class AllFriends extends AppCompatActivity implements View.OnClickListene
         updateListView();
         super.onResume();
     }
+
+
+    //Asynctask for database connection
+    private class AllFriendsTask extends AsyncTask<Void, Void, ArrayList<Friend>> {
+
+        private ArrayList<Friend> friends;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ArrayList<Friend> doInBackground(Void... voids) {
+            friends = new ArrayList <Friend>(friendsDatabaseHelper.getFriendsData());
+            return friends;
+        }
+    }
+
 }

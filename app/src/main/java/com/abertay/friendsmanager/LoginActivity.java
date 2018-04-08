@@ -10,8 +10,8 @@ import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    EditText username;
-    EditText password;
+    EditText username,password;
+    String usernameRestored,passwordRestored;
     Button login;
 
     @Override
@@ -21,6 +21,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         username=(EditText)findViewById(R.id.username);
         password=(EditText)findViewById(R.id.secretWord);
         login=(Button)findViewById(R.id.login);
+
+        checkRotation(usernameRestored,passwordRestored);
 
         login.setOnClickListener(this);
     }
@@ -42,22 +44,49 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String p = password.getText().toString();
 
         if(u.equals("patrick") && p.equals("abertay")){
+            deleteInputs();
             Toast.makeText(this,"Successful",Toast.LENGTH_SHORT).show();
             Intent goToMainActivity = new Intent(this,MainActivity.class);
             startActivity(goToMainActivity);
         }
         else{
             Toast.makeText(this,"Failed, try again",Toast.LENGTH_LONG).show();
-            username.setText("");
-            password.setText("");
+            deleteInputs();
         }
     }
 
-    //When User returns, fields will be cleared
-    @Override
-    protected void onResume() {
+    public void deleteInputs(){
         username.setText("");
         password.setText("");
-        super.onResume();
     }
+
+    //restore inputs fields
+    public void checkRotation(String usernameRestored,String passwordRestored){
+        if(usernameRestored != null){
+            username.setText(usernameRestored);
+        }
+        if(passwordRestored !=null){
+            password.setText(passwordRestored);
+        }
+    }
+
+    // Save UI state changes to the savedInstanceState.
+    // This bundle will be passed to onCreate if the process is killed and restarted.
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("MyUsername", "Welcome back to Android");
+        savedInstanceState.putString("MyPassword", "Welcome back to Android");
+    }
+
+    // Restore UI state from the savedInstanceState.
+    // This bundle has also been passed to onCreate.
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        usernameRestored = savedInstanceState.getString("MyUsername");
+        passwordRestored = savedInstanceState.getString("MyString");
+    }
+
+
 }

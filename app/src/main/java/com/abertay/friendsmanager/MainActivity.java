@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button showFriends=(Button)findViewById(R.id.showFriends);
         ImageButton addFriends=(ImageButton)findViewById(R.id.addFriends);
 
+        //setMainStats();
+
         askForActivity.setOnClickListener(this);
         showFriends.setOnClickListener(this);
         addFriends.setOnClickListener(this);

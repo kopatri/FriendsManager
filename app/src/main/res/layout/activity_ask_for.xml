@@ -45,12 +45,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/nameStatic"
         android:layout_margin="10dp"
-        android:text="@string/mobile_phone_hint"
-
+        android:text="@string/contact_information"
         android:textSize="20sp"
         android:textColor="#000000"
         android:gravity="center"
-        android:id="@+id/telephoneNumber"/>
+        android:id="@+id/contactInformation"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -58,21 +57,32 @@
         android:hint="@string/ask_your_friend_with_n_a_personal_text_message_n_for_an_activity"
         android:gravity="center"
         android:layout_margin="10dp"
-        android:layout_below="@id/telephoneNumber"
+        android:layout_below="@id/contactInformation"
         android:background="@drawable/oval_style"
         android:id="@+id/message"/>
 
-    <Button
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/oval_style"
+        android:background="@drawable/ic_sms_black_48dp"
         android:gravity="center"
-        android:text="@string/send_sms"
-        android:textSize="30sp"
+        android:contentDescription="@string/send_sms"
         android:id="@+id/sendSMS"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/ic_email_black_48dp"
+        android:gravity="center"
+        android:contentDescription="@string/send_email"
+        android:id="@+id/sendEmail"/>
 
     <ImageButton
         android:layout_width="wrap_content"

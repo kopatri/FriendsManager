@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/general_background"
-    tools:context="com.abertay.friendsmanager.DetailFriendView"
-    android:id="@+id/layoutDetailFriendView">
+    android:orientation="vertical"
+    tools:context="com.abertay.friendsmanager.EditFriendActivity"
+    android:id="@+id/editFriendLayout">
 
     <ImageView
         android:layout_width="match_parent"
@@ -15,23 +14,25 @@
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:src="@drawable/detail_view"
+        android:src="@drawable/edit_friend_logo"
         android:contentDescription="@string/logo"
-        android:id="@+id/addNewFriend"/>
+        android:id="@+id/editFriendLogo"/>
 
-    <TextView
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/addNewFriend"
+        android:layout_below="@+id/editFriendLogo"
         android:layout_margin="10dp"
         android:textSize="25sp"
         android:background="@drawable/oval_style"
         android:gravity="center"
         android:text="@string/name_only"
         android:textColor="#000000"
-        android:id="@+id/name"/>
+        android:inputType="textPersonName"
+        tools:ignore="LabelFor"
+        android:id="@+id/name" />
 
-    <TextView
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/name"
@@ -41,9 +42,11 @@
         android:gravity="center"
         android:text="@string/mobile_phone_hint"
         android:textColor="#000000"
-        android:id="@+id/mobilePhone"/>
+        android:inputType="phone"
+        tools:ignore="LabelFor"
+        android:id="@+id/mobilePhone" />
 
-    <TextView
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/mobilePhone"
@@ -53,9 +56,11 @@
         android:gravity="center"
         android:text="@string/birthday"
         android:textColor="#000000"
-        android:id="@+id/birthday"/>
+        android:inputType="date"
+        tools:ignore="LabelFor"
+        android:id="@+id/birthday" />
 
-    <TextView
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/birthday"
@@ -65,7 +70,9 @@
         android:gravity="center"
         android:text="@string/email_hint"
         android:textColor="#000000"
-        android:id="@+id/email"/>
+        android:inputType="textEmailAddress"
+        tools:ignore="LabelFor"
+        android:id="@+id/email" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -74,9 +81,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:background="@drawable/ic_delete_black_75dp"
+        android:background="@drawable/ic_check_circle_black_75dp"
         android:contentDescription="@string/delete"
-        android:id="@+id/deleteFriend"/>
+        android:id="@+id/commitChange"/>
 
     <ImageButton
         android:layout_width="wrap_content"
