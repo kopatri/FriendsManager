@@ -138,8 +138,6 @@ public class EditFriendActivity extends AppCompatActivity implements View.OnClic
         protected Void doInBackground(Object ... params) {
             Friend oldToDelete = (Friend) params[0];
             Friend newToSave = (Friend) params[1];
-            Log.d("InfoOld", oldToDelete.name);
-            Log.d("InfoNew", newToSave.name);
             FriendsDatabaseHelper friendsDatabaseHelper = new FriendsDatabaseHelper(getApplicationContext());
             friendsDatabaseHelper.commitChanges(oldToDelete,newToSave);
             return null;

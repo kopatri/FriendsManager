@@ -1,7 +1,11 @@
 package com.abertay.friendsmanager;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
+
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -18,7 +22,13 @@ import java.util.regex.Pattern;
 
 public class InputCheck  {
 
-    private boolean areInputFieldsFilled(String friendName, String friendBirthday, String friendMobilPhone, String friendEmail) {
+    private Context mContext;
+
+    public InputCheck (Context context){
+        mContext = context;
+    }
+
+    protected boolean areInputFieldsFilled(String friendName, String friendBirthday, String friendMobilPhone, String friendEmail) {
         if (friendName.equals("") || friendBirthday.equals("") || friendMobilPhone.equals("") || friendEmail.equals("")) {
             Log.d("Required Fields", "All fields are not filled");
             return false;
@@ -28,20 +38,17 @@ public class InputCheck  {
         }
     }
 
-    private boolean isEmailValid(String friendEmail){
+    protected boolean isEmailValid(String friendEmail){
         return android.util.Patterns.EMAIL_ADDRESS.matcher(friendEmail).matches();
     }
 
-    private boolean isEmailAlreadyUsed(String friendEmail) {
+    protected boolean isEmailAlreadyUsed(String friendEmail) {
         boolean checkEmail=false;
         ArrayList<Friend> friend = new ArrayList<>();
         try {
-            friend = new AllFriendsTask().execute().get();
-        } catch (InterruptedException e) {
-            //Toast.makeText(getApplicationContext(),"Data transfer was interrupted: "+e,Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-           // Toast.makeText(getApplicationContext(),"Error: "+e,Toast.LENGTH_LONG).show();
+            friend = new AllFriendsTask(mContext).execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            Toast.makeText(mContext,"Data transfer was interrupted: "+e,Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
 
@@ -56,16 +63,13 @@ public class InputCheck  {
         return checkEmail;
     }
 
-    private boolean isPhoneNumberAlreadyUsed(String friendMobilPhone) {
+    protected boolean isPhoneNumberAlreadyUsed(String friendMobilPhone) {
         boolean checkMobilePhone=false;
         ArrayList<Friend> friend = new ArrayList<>();
         try {
-            friend = new AllFriendsTask().execute().get();
-        } catch (InterruptedException e) {
-           // Toast.makeText(getApplicationContext(),"Data transfer was interrupted: "+e,Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            //Toast.makeText(getApplicationContext(),"Error: "+e,Toast.LENGTH_LONG).show();
+            friend = new AllFriendsTask(mContext).execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+           Toast.makeText(mContext,"Data transfer was interrupted: "+e,Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
 
@@ -80,27 +84,28 @@ public class InputCheck  {
         return checkMobilePhone;
     }
 
-    private boolean isPhoneNumberValid(String friendMobilPhone){
-        String expression = "^\\+?\\(?[0-9]{1,3}\\)? ?-?[0-9]{1,3} ?-?[0-9]{3,5} ?-?[0-9]{4}( ?-?[0-9]{3})?";  //regular expression tool
-        CharSequence inputString = friendMobilPhone;
+    protected boolean isPhoneNumberValid(String friendMobilPhone){
+        String expression = "^[+]?[0-9]{10,13}$";  //regular expression tool "^\\+?\\(?[0-9]{1,3}\\)? ?-?[0-9]{1,3} ?-?[0-9]{3,5} ?-?[0-9]{4}( ?-?[0-9]{3})?"
+        //CharSequence inputString = friendMobilPhone;
         Pattern pattern = Pattern.compile(expression);
-        Matcher matcher = pattern.matcher(inputString);
+        Matcher matcher = pattern.matcher(friendMobilPhone);
         if (matcher.matches())
-        {
-            return false;
-        }
-        else{
+        {  //changed true false
             return true;
         }
+        else{
+            return false;
+        }
     }
 
-    private boolean isLegalDate(String friendBirthday) {
+    protected boolean isDateFormatValid(String friendBirthday) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat birthdayDate =new SimpleDateFormat ("dd/MM/yyyy");
         birthdayDate.setLenient(false);
-        return birthdayDate.parse(friendBirthday, new ParsePosition(0)) != null;
+        if (birthdayDate.parse(friendBirthday, new ParsePosition(0)) != null) return true;
+        else return false;
     }
 
-    private int parseDay(String friendBirthday) {
+    protected int parseDay(String friendBirthday) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date friendsDate = null;
         try {
@@ -116,74 +121,25 @@ public class InputCheck  {
 
     // Most common case, friend is older than system date
     //not older than oldest person of all time ~123 years (44895): https://en.wikipedia.org/wiki/List_of_the_verified_oldest_people
-    private boolean isDateLogicForPast(String friendBirthday) {
+    protected boolean isDateLogicForPast(String friendBirthday) {
         int numOfDays = parseDay(friendBirthday);
+        Log.d("numOfDays", ""+ numOfDays);
         return numOfDays<44895;
     }
 
-    //friend is a new born baby, unlikely case, but possible
-    private boolean isNewbornDate(String friendBirthday) {
+    //friend not born yet, not possible
+    protected boolean isFutureDate(String friendBirthday){
         int numOfDays = parseDay(friendBirthday);
+        Log.d("numOfDays", ""+ numOfDays);
+        return numOfDays < 0;
+    }
+
+    //friend is a new born baby, unlikely case, but possible
+    protected boolean isNewbornDate(String friendBirthday) {
+        int numOfDays = parseDay(friendBirthday);
+        Log.d("numOfDays", ""+ numOfDays);
         return numOfDays==0;
     }
 
-    //friend not born yet, not possible
-    private boolean isFutureDate(String friendBirthday){
-        Date currentSystemDate = Calendar.getInstance().getTime();
-        if(friendBirthday.compareTo(String.valueOf(currentSystemDate))>0){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    private boolean emailAlreadyUsed(String email){
-        boolean checkEmail=false;
-        ArrayList<Friend> friend = new ArrayList<>();
-        try {
-            friend = new AllFriendsTask().execute().get();
-        } catch (InterruptedException e) {
-            //Toast.makeText(getApplicationContext(),"Data transfer was interrupted: "+e,Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            //Toast.makeText(getApplicationContext(),"Error: "+e,Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-
-        for(int i=0; i<friend.size(); i++){
-            if(email.equals(friend.get(i).email)){
-                checkEmail =  true;
-            }
-            else{
-                checkEmail= false;
-            }
-        }
-        return checkEmail;
-    }
-
-    private boolean phoneNumberAlreadyUsed(String number){
-        boolean checkMobilePhone=false;
-        ArrayList<Friend> friend = new ArrayList<>();
-        try {
-            friend = new AllFriendsTask().execute().get();
-        } catch (InterruptedException e) {
-            //Toast.makeText(getApplicationContext(),"Data transfer was interrupted: "+e,Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            //Toast.makeText(getApplicationContext(),"Error: "+e,Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-
-        for(int i=0; i<friend.size(); i++){
-            if(number.equals(friend.get(i).mobilePhone)){
-                checkMobilePhone =  true;
-            }
-            else{
-                checkMobilePhone= false;
-            }
-        }
-        return checkMobilePhone;
-    }
 }
 

@@ -35,14 +35,7 @@ public class AddFriendsActivity extends AppCompatActivity implements View.OnClic
     ImageView addNewFriend;
     EditText name,birthday,mobilePhone,email;
     String friendName,friendBirthday,friendMobilPhone,friendEmail;
-    boolean logicDateCheck;
     FriendsDatabaseHelper friendsDatabaseHelper;
-
-    //in case of friend will be edited
-    int actualPosition;
-    boolean editReason;
-    String editName,editMobilePhone,editBirthday,editEmail;
-    String selectedField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +51,6 @@ public class AddFriendsActivity extends AppCompatActivity implements View.OnClic
         ImageButton backButton = (ImageButton) findViewById(R.id.backButton);
 
         friendsDatabaseHelper = new FriendsDatabaseHelper(this);
-
-        //in case of friend will be edited
-        /*editReason = getIntent().getBooleanExtra("EditReason", false);
-        if(editReason){
-            getEditFriendData();
-            showFriendToEdit();
-            moveCursorToPosition(selectedField);
-        }*/
 
         addFriends.setOnClickListener(this);
         backButton.setOnClickListener(this);
@@ -93,255 +78,118 @@ public class AddFriendsActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    public void getEditFriendData(){
-        if(editReason) {
-            actualPosition = getIntent().getIntExtra("EditPosition", 0);
-            selectedField = getIntent().getStringExtra("EditSelectedField");
-            Log.i("selectedFieldToEdit",selectedField);
-            editName = getIntent().getStringExtra("currentName");
-            editBirthday= getIntent().getStringExtra("currentBirthday");
-            editMobilePhone= getIntent().getStringExtra("currentMobilePhone");
-            editEmail=getIntent().getStringExtra("currentEmail");
-        }
-    }
-
-    public void showFriendToEdit(){
-        name.setText(editName);
-        birthday.setText(editBirthday);
-        mobilePhone.setText(editMobilePhone);
-        email.setText(editEmail);
-    }
-
-    //Cursor after the text, right to the text
-    public void moveCursorToPosition(String selectedField){
-        switch(selectedField){
-            case "nameEdit":
-                name.requestFocus(name.length());
-                break;
-            case "birthdayEdit":
-                birthday.requestFocus(birthday.length());
-                break;
-            case "mobilePhoneEdit":
-                mobilePhone.requestFocus(mobilePhone.length());
-                break;
-            case "emailEdit":
-                email.requestFocus(email.length());
-                break;
-            default:
-                name.requestFocus(name.length());
-                break;
-        }
-    }
-
     //checks that all inputs are filled, if not user gets Toast to fullfil inputs
     private boolean isInputCorrect() throws ParseException {
-        InputCheck input = new InputCheck();
+        int checkValue=0; //8checks to pass
 
-        int checkValue = 0;
+        InputCheck input = new InputCheck(this);
+
         friendName = name.getText().toString();
         friendBirthday= birthday.getText().toString();
         friendMobilPhone=mobilePhone.getText().toString();
-        friendEmail=email.getText().toString();
+        friendEmail= email.getText().toString();
 
-        //Input fields filled check
-        if(friendName.equals("")||friendBirthday.equals("")||friendMobilPhone.equals("")||friendEmail.equals("")){
+        //Inputcheck
+        if(input.areInputFieldsFilled(friendName,friendBirthday,friendMobilPhone,friendEmail)){
+            Log.d("Inputs filled", "true");
+            ++checkValue;
+        }
+        else{
             Toast.makeText(this, "Complete all entries", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        else{
-            Log.d("Required Fields","All fields filled");
-            checkValue++;
         }
 
-        //Email validcheck
-        if(isEmailValid(friendEmail)){
+        //Emailcheck
+        if(input.isEmailValid(friendEmail)){
+            Log.d("Email valid", "true");
             email.setTextColor(GREEN);
-            Log.d("Email check 1", "Email check passed");
-            checkValue++;
+            ++checkValue;
         }
         else{
-            String notValidMail ="Email not valid, try again";
-            email.setText(""); //clean up for hint
-            email.setHint(notValidMail);
+            email.setText("");
+            email.setHint("Email not valid, try again");
             email.setHintTextColor(RED);
         }
 
-        //Email already used check
-        if(emailAlreadyUsed(friendEmail)){
-            String notValidMail ="Email already used";
-            email.setText(""); //clean up for hint
-            email.setHint(notValidMail);
+        if(input.isEmailAlreadyUsed(friendEmail)){
+            email.setText("");
+            email.setHint("Email already used");
             email.setHintTextColor(RED);
         }
         else{
+            Log.d("Email already used", "false");
             email.setTextColor(GREEN);
-            Log.d("Email check 2", "Email used check passed");
-            checkValue++;
+            ++checkValue;
         }
 
-        //checks if phone number is valid
-        if(isPhoneNumberValid(friendMobilPhone)){
-            String notValidPhoneNumber ="Number not valid";
-            mobilePhone.setText(""); //clean up for hint
-            mobilePhone.setHint(notValidPhoneNumber);
+        //Phonecheck
+        if(input.isPhoneNumberValid(friendMobilPhone)){
+            Log.d("Phone number valid", "true");
+            mobilePhone.setTextColor(GREEN);
+            ++checkValue;
+        }
+        else{
+            mobilePhone.setText("");
+            mobilePhone.setHint("Number not valid");
             mobilePhone.setHintTextColor(RED);
         }
-        else{
-            mobilePhone.setTextColor(GREEN);
-            Log.d("Phone number 2", "check passed");
-            checkValue++;
-        }
 
-        //Phone number already used check
-        if(phoneNumberAlreadyUsed(friendMobilPhone)){
-            String notValidPhoneNumber ="Number already used";
-            mobilePhone.setText(""); //clean up for hint
-            mobilePhone.setHint(notValidPhoneNumber);
+        if(input.isPhoneNumberAlreadyUsed(friendMobilPhone)){
+            mobilePhone.setText("");
+            mobilePhone.setHint("Number already used");
             mobilePhone.setHintTextColor(RED);
+            ++checkValue;
         }
         else{
+            Log.d("MoNumber already used", "false");
             mobilePhone.setTextColor(GREEN);
-            Log.d("Phone number 2", "check passed");
-            checkValue++;
+            ++checkValue;
         }
 
-        //Date Format Check
-        if(isLegalDate(friendBirthday)){
+        //Datecheck, first validation of date then other checks
+        if(input.isDateFormatValid(friendBirthday)){
+            Log.d("Valid Dateformat", "true");
             birthday.setTextColor(GREEN);
-            Log.d("Datecheck", "Date check passed");
-            checkValue++;
+            ++checkValue;
         }
         else{
-            String notValidDate ="Date not valid d/m/yyyy";
-            birthday.setText(""); //clean up for hint
-            birthday.setHint(notValidDate);
+            birthday.setText("");
+            birthday.setHint("Date not valid d/m/yyyy");
             birthday.setHintTextColor(RED);
+            return false; //jump out to prevent Error in upcoming code below
         }
 
-        //Date Logic check
-        if(isDateLogic(friendBirthday)){
+        if(input.isDateLogicForPast(friendBirthday)){
             birthday.setTextColor(GREEN);
-            Log.d("No foolish dates", "Date logic confirmed");
-            checkValue++;
-        }
-        return checkValue == 7;  //7checks to pass
-    }
-
-    private boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private boolean isLegalDate(String s) {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat birthdayDate =new SimpleDateFormat ("dd/MM/yyyy");
-        birthdayDate.setLenient(false);
-        return birthdayDate.parse(s, new ParsePosition(0)) != null;
-    }
-
-    private boolean isDateLogic(String strDate) throws ParseException {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date friendsDate = sdf.parse(strDate);
-        Date currentSystemDate = Calendar.getInstance().getTime();
-
-        long diff =  currentSystemDate.getTime() - friendsDate.getTime();
-        int numOfDays = (int) (diff / (1000 * 60 * 60 * 24));
-
-        // Most common case, friend is older than system date
-        //not older than oldest person of all time ~123 years (44895): https://en.wikipedia.org/wiki/List_of_the_verified_oldest_people
-        if(numOfDays<44895){
-            birthday.setTextColor(GREEN);
-            Log.d("Birthdaycheck", "Birthday check passed");
-            logicDateCheck = true;
+            Log.d("Birthday not to old", "true");
+            ++checkValue;
         }
         else{
-            String notValidBirthday ="Your friend cant be\n older than 123 years";
-            Toast.makeText(this, "Is you friend still alive?",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Is your friend still alive?",Toast.LENGTH_LONG).show();
             birthday.setText(""); //clean up for hint
-            birthday.setHint(notValidBirthday);
+            birthday.setHint("Your friend cant be\n older than 123 years");
             birthday.setHintTextColor(RED);
-            logicDateCheck = false;
+
         }
 
-        //friend is a new born baby, unlikely case, but possible
-        if(numOfDays==0){
-            birthday.setTextColor(GREEN);
-            Log.d("Birthdaycheck", "Birthday check passed");
-            Toast.makeText(this, "BABY FRIENDSHIP FOREVER",Toast.LENGTH_LONG).show();
-            logicDateCheck = true;
-        }
-
-        //friend not born yet, not possible
-        if(friendsDate.compareTo(currentSystemDate)>0){
-            String notValidBirthday ="Your friend is not born yet";
+        if(input.isFutureDate(friendBirthday)){
             Toast.makeText(this, "Are you MartyMcFly?",Toast.LENGTH_LONG).show();
             birthday.setText(""); //clean up for hint
-            birthday.setHint(notValidBirthday);
+            birthday.setHint("Your friend is not born yet");
             birthday.setHintTextColor(RED);
-            logicDateCheck = false;
-        }
-
-        return logicDateCheck;
-    }
-
-    private boolean emailAlreadyUsed(String email){
-        boolean checkEmail=false;
-        ArrayList<Friend> friend = new ArrayList<>();
-        try {
-            friend = new AllFriendsTask().execute().get();
-        } catch (InterruptedException e) {
-            Toast.makeText(getApplicationContext(),"Data transfer was interrupted: "+e,Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            Toast.makeText(getApplicationContext(),"Error: "+e,Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-
-        for(int i=0; i<friend.size(); i++){
-            if(email.equals(friend.get(i).email)){
-                checkEmail =  true;
-            }
-            else{
-                checkEmail= false;
-            }
-        }
-        return checkEmail;
-    }
-
-    private boolean isPhoneNumberValid(String number){
-        String expression = "^\\+?\\(?[0-9]{1,3}\\)? ?-?[0-9]{1,3} ?-?[0-9]{3,5} ?-?[0-9]{4}( ?-?[0-9]{3})?";  //regular expression tool
-        CharSequence inputString = number;
-        Pattern pattern = Pattern.compile(expression);
-        Matcher matcher = pattern.matcher(inputString);
-        if (matcher.matches())
-        {
-            return false;
         }
         else{
-            return true;
-        }
-    }
-
-    private boolean phoneNumberAlreadyUsed(String number){
-        boolean checkMobilePhone=false;
-        ArrayList<Friend> friend = new ArrayList<>();
-        try {
-            friend = new AllFriendsTask().execute().get();
-        } catch (InterruptedException e) {
-            Toast.makeText(getApplicationContext(),"Data transfer was interrupted: "+e,Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            Toast.makeText(getApplicationContext(),"Error: "+e,Toast.LENGTH_LONG).show();
-            e.printStackTrace();
+            Log.d("Future birthday", "false");
+            birthday.setTextColor(GREEN);
+            ++checkValue;
         }
 
-        for(int i=0; i<friend.size(); i++){
-            if(number.equals(friend.get(i).mobilePhone)){
-                checkMobilePhone =  true;
-            }
-            else{
-                checkMobilePhone= false;
-            }
+        //Easter Egg if-statement
+        if(input.isNewbornDate(friendBirthday)){
+            Log.d("Today born", "true");
+            birthday.setTextColor(GREEN);
+            Toast.makeText(this, "BABY FRIENDSHIP FOREVER",Toast.LENGTH_LONG).show();
         }
-        return checkMobilePhone;
+        return checkValue == 8;
     }
 
     //adds friend to list
@@ -371,7 +219,6 @@ public class AddFriendsActivity extends AppCompatActivity implements View.OnClic
         editor.apply();
     }
 
-
     //Asynctasks for database operations
     @SuppressLint("StaticFieldLeak")
     private class AddFriendTask extends AsyncTask<Friend,Void,Boolean>{
@@ -391,23 +238,6 @@ public class AddFriendsActivity extends AppCompatActivity implements View.OnClic
             else{
                 Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_SHORT).show();
             }
-        }
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class AllFriendsTask extends AsyncTask<Void, Void, ArrayList<Friend>>{
-
-        private ArrayList<Friend> friends;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected ArrayList<Friend> doInBackground(Void... voids) {
-            friends = new ArrayList <Friend>(friendsDatabaseHelper.getFriendsData());
-            return friends;
         }
     }
 }

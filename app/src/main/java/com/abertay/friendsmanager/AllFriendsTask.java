@@ -1,14 +1,19 @@
 package com.abertay.friendsmanager;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
+@SuppressLint("StaticFieldLeak")
 public class AllFriendsTask extends AsyncTask<Void, Void, ArrayList<Friend>> {
-    FriendsDatabaseHelper friendsDatabaseHelper;
-    private ArrayList<Friend> friends;
+
+    private Context mContext;
+
+    AllFriendsTask(Context context){
+        mContext = context;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -17,7 +22,8 @@ public class AllFriendsTask extends AsyncTask<Void, Void, ArrayList<Friend>> {
 
     @Override
     protected ArrayList<Friend> doInBackground(Void... voids) {
-        friends = new ArrayList <Friend>(friendsDatabaseHelper.getFriendsData());
+        FriendsDatabaseHelper friendsDatabaseHelper = new FriendsDatabaseHelper(mContext);
+        ArrayList<Friend> friends = new ArrayList<Friend>(friendsDatabaseHelper.getFriendsData());
         return friends;
     }
 }

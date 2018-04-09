@@ -45,7 +45,6 @@ public class DetailFriendView extends AppCompatActivity implements View.OnClickL
         backButton = (ImageButton) findViewById(R.id.backButton);
         deleteFriendButton = (ImageButton) findViewById(R.id.deleteFriend);
         friendsDatabaseHelper = new FriendsDatabaseHelper(this);
-        layoutDetailFriendView = (RelativeLayout) findViewById(R.id.layoutDetailFriendView);
 
         actualPosition = getIntent().getIntExtra("Position",0);
         showFriendInDetailView();
