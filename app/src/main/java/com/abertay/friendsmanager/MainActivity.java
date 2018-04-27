@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
+//Overview about stats and get from here to everywhere,
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView latestFriend,lastDeletedFriend,totalFriends;
@@ -29,8 +29,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button askForActivity = (Button) findViewById(R.id.askForActivity);
         Button showFriends=(Button)findViewById(R.id.showFriends);
         ImageButton addFriends=(ImageButton)findViewById(R.id.addFriends);
-
-        //setMainStats();
 
         askForActivity.setOnClickListener(this);
         showFriends.setOnClickListener(this);
@@ -66,18 +64,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    //Methods that set Statistics for MainActivity
+    //Methods that set statistics for MainActivity
     private void setMainStats() {
-       SharedPreferences mainStats = getSharedPreferences("mainStats",0);
-
+        SharedPreferences mainStats = getSharedPreferences("mainStats",0);
         String localCounter ="Total friends:\n"+numberOfFriends();
         totalFriends.setText(localCounter);
 
         String latestFriendLogicCheck = mainStats.getString(SAVED_LATEST_FRIEND,"No friends in friendslist");
         String lastDeletedFriendLogicCheck = mainStats.getString(SAVED_LAST_DELETED_FRIEND,"No friends in friendslist");
-
         latestFriend.setText(String.format("Latest friend:\n%s", mainStats.getString(SAVED_LATEST_FRIEND, "No friends in friendslist")));
-
         lastDeletedFriend.setText(String.format("Last deleted friend:\n%s", mainStats.getString(SAVED_LAST_DELETED_FRIEND, "No friends in friendslist")));
 
         //Logic Checks
@@ -108,5 +103,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setMainStats();
         super.onResume();
     }
-
 }

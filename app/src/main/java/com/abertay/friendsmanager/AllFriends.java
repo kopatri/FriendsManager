@@ -49,7 +49,8 @@ public class AllFriends extends AppCompatActivity implements View.OnClickListene
                 break;
         }
     }
-    
+
+    //Update the frienscounter
     public void updateTotalFriends(){
         SharedPreferences mainStats =getSharedPreferences("mainStats",0);
         localCounter =mainStats.getInt(SAVED_TOTAL_FRIENDS,0);
@@ -59,7 +60,6 @@ public class AllFriends extends AppCompatActivity implements View.OnClickListene
 
     public void updateListView(){
         updateTotalFriends();
-
         try {
             friends = new AllFriendsTask().execute().get();
         } catch (InterruptedException e) {
@@ -69,7 +69,6 @@ public class AllFriends extends AppCompatActivity implements View.OnClickListene
             Toast.makeText(getApplicationContext(),"Error: "+e,Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
-
 
         String[] friendsName = new String[localCounter];
         for(int i=0; i<localCounter; i++){
@@ -86,11 +85,9 @@ public class AllFriends extends AppCompatActivity implements View.OnClickListene
                 startActivity(goToDetailFriendView);
             }
         });
-
-
-
     }
 
+    //keep friendslist updated
     @Override
     protected void onResume() {
         updateListView();
@@ -114,5 +111,4 @@ public class AllFriends extends AppCompatActivity implements View.OnClickListene
             return friends;
         }
     }
-
 }

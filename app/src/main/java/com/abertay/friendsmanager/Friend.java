@@ -3,7 +3,7 @@ package com.abertay.friendsmanager;
 /**
  * Created by Patrick Kornek on 25.02.2018.
  */
-
+// Object class
 public class Friend {
 
     String name;
@@ -60,7 +60,5 @@ public class Friend {
                 ", email='" + email + '\'' +
                 '}';
     }
-
-
 }
 

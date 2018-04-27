@@ -4,24 +4,18 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-
 import static com.abertay.friendsmanager.MainActivity.SAVED_LAST_DELETED_FRIEND;
 import static com.abertay.friendsmanager.MainActivity.SAVED_TOTAL_FRIENDS;
-
-public class DetailFriendView extends AppCompatActivity implements View.OnClickListener,GestureDetector.OnGestureListener, View.OnTouchListener {
+// shows data of selected friend in detail, all information
+public class DetailFriendView extends AppCompatActivity implements View.OnClickListener {
 
     TextView name, birthday, mobilePhone, email;
     String currentName,currentBirthday,currentMobilePhone,currentEmail;
@@ -29,12 +23,10 @@ public class DetailFriendView extends AppCompatActivity implements View.OnClickL
     int actualPosition;
     ArrayList<Friend> friend;
     FriendsDatabaseHelper friendsDatabaseHelper;
-    RelativeLayout layoutDetailFriendView;
-    private GestureDetectorCompat mDetector;
-
     //for edit when user wants do change data
     String selectedField;
 
+    @SuppressLint("ClickableViewAccessibility")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_friend_view);
@@ -49,16 +41,12 @@ public class DetailFriendView extends AppCompatActivity implements View.OnClickL
         actualPosition = getIntent().getIntExtra("Position",0);
         showFriendInDetailView();
 
-        mDetector = new GestureDetectorCompat(this,this);
         backButton.setOnClickListener(this);
         deleteFriendButton.setOnClickListener(this);
-
-
-        name.setOnTouchListener(this);
-        birthday.setOnTouchListener(this);
-        mobilePhone.setOnTouchListener(this);
-        email.setOnTouchListener(this);
-
+        name.setOnClickListener(this);
+        birthday.setOnClickListener(this);
+        mobilePhone.setOnClickListener(this);
+        email.setOnClickListener(this);
     }
 
     @Override
@@ -71,13 +59,29 @@ public class DetailFriendView extends AppCompatActivity implements View.OnClickL
                 deleteFriend();
                 finish();
                 break;
+            case R.id.name:
+                selectedField="nameEdit";
+                fireIntentWithData();
+                break;
+            case R.id.birthday:
+                selectedField="birthdayEdit";
+                fireIntentWithData();
+                break;
+            case R.id.mobilePhone:
+                selectedField="mobilePhoneEdit";
+                fireIntentWithData();
+                break;
+            case R.id.email:
+                selectedField="emailEdit";
+                fireIntentWithData();
+                break;
         }
     }
 
     public void showFriendInDetailView(){
 
         try {
-            friend = new AllFriendsTask().execute().get();
+            friend = new AllFriendsTask(this).execute().get();
         } catch (InterruptedException e) {
             Toast.makeText(getApplicationContext(),"Data transfer was interrupted: "+e,Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -119,37 +123,16 @@ public class DetailFriendView extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onResume() {
+        showFriendInDetailView();
         super.onResume();
     }
 
-    //Gesture and methods which belongs to it
-    @Override
-    public boolean onDown(MotionEvent e) {
-        return false;
-    }
 
-    @Override
-    public void onShowPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent e) {
-        Toast.makeText(getApplicationContext(), "onLongPress: Edit inputs", Toast.LENGTH_LONG).show();
-        Intent goToEditFriendActivity = new Intent(this,EditFriendActivity.class);
-        //sending data about actual postion and that user want to edit friend
+    public void fireIntentWithData(){
+        //sending data about actual position and that user want to edit friend
         //Going to add FriendActivity
-
+        Toast.makeText(getApplicationContext(), selectedField, Toast.LENGTH_LONG).show();
+        Intent goToEditFriendActivity = new Intent(this,EditFriendActivity.class);
         goToEditFriendActivity.putExtra("currentName",currentName);
         goToEditFriendActivity.putExtra("currentBirthday",currentBirthday);
         goToEditFriendActivity.putExtra("currentMobilePhone",currentMobilePhone);
@@ -159,59 +142,9 @@ public class DetailFriendView extends AppCompatActivity implements View.OnClickL
         startActivity(goToEditFriendActivity);
     }
 
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        return false;
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        //get selected field
-        switch(v.getId()){
-            case R.id.name:
-                selectedField="nameEdit";
-                break;
-            case R.id.birthday:
-                selectedField="birthdayEdit";
-                break;
-            case R.id.mobilePhone:
-                selectedField="mobilePhoneEdit";
-                break;
-            case R.id.email:
-                selectedField="emailEdit";
-                break;
-        }
-        Log.i("Touched", selectedField);
-        if (this.mDetector.onTouchEvent(event)) {
-            return true;
-        }
-        return super.onTouchEvent(event);
-    }
-
-
-    //Asynctask transfer from and to database
-    //get Data
-    @SuppressLint("StaticFieldLeak")
-    private class AllFriendsTask extends AsyncTask<Void, Void, ArrayList<Friend>>{
-
-        private ArrayList<Friend> friends;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected ArrayList<Friend> doInBackground(Void... voids) {
-            friends = new ArrayList <Friend>(friendsDatabaseHelper.getFriendsData());
-            return friends;
-        }
-    }
-
-    //delete friend
+    //Asynctask transfer from and to database, delete friend
     @SuppressLint("StaticFieldLeak")
     private class DeleteFriendTask extends AsyncTask<Friend, Void, Void> {
-        //FriendsDatabaseHelper friendsDatabaseHelper;
 
         @Override
         protected Void doInBackground(Friend... friend) {

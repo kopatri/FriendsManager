@@ -17,6 +17,8 @@
         android:layout_above="@id/secretWord"
         android:background="@drawable/oval_style"
         android:gravity="center"
+        android:maxLength="20"
+        android:singleLine="true"
         android:hint="@string/username"
         android:id="@+id/username" />
 
@@ -29,6 +31,8 @@
         android:layout_marginStart="50dp"
         android:background="@drawable/oval_style"
         android:gravity="center"
+        android:maxLength="20"
+        android:singleLine="true"
         android:hint="@string/password"
         android:inputType="textPassword" />
 

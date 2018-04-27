@@ -1,15 +1,9 @@
 package com.abertay.friendsmanager;
-//Emailcheck: https://stackoverflow.com/questions/1819142/how-should-i-validate-an-e-mail-address
-//Datecheck: https://stackoverflow.com/questions/5369682/get-current-time-and-date-on-android
-//both sources are customized, other code is combined from different sources and customized
 
-import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.Selection;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -17,15 +11,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 import java.text.ParseException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static android.graphics.Color.GREEN;
 import static android.graphics.Color.RED;
 import static com.abertay.friendsmanager.MainActivity.SAVED_LATEST_FRIEND;
@@ -34,7 +19,7 @@ import static com.abertay.friendsmanager.MainActivity.SAVED_TOTAL_FRIENDS;
 public class AddFriendsActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView addNewFriend;
     EditText name,birthday,mobilePhone,email;
-    String friendName,friendBirthday,friendMobilPhone,friendEmail;
+    String friendName,friendBirthday,friendMobilePhone,friendEmail;
     FriendsDatabaseHelper friendsDatabaseHelper;
 
     @Override
@@ -68,29 +53,40 @@ public class AddFriendsActivity extends AppCompatActivity implements View.OnClic
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
-                    Toast.makeText(this,"Something went wrong with Birthday, try again",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this,"Something went wrong with Birthday, try again",Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.backButton:
-                Toast.makeText(this,"Data not saved",Toast.LENGTH_LONG).show();
+                getInputsFromEditText();
+                if(isAnythingInside()) {
+                    Toast.makeText(this, "Data not saved", Toast.LENGTH_SHORT).show();
+                }
                 finish();
                 break;
         }
     }
 
-    //checks that all inputs are filled, if not user gets Toast to fullfil inputs
-    private boolean isInputCorrect() throws ParseException {
-        int checkValue=0; //8checks to pass
-
-        InputCheck input = new InputCheck(this);
-
+    private void getInputsFromEditText(){
         friendName = name.getText().toString();
         friendBirthday= birthday.getText().toString();
-        friendMobilPhone=mobilePhone.getText().toString();
+        friendMobilePhone=mobilePhone.getText().toString();
         friendEmail= email.getText().toString();
+    }
+
+    private boolean isAnythingInside(){
+        return !friendName.equals("") || !friendBirthday.equals("")
+                || !friendMobilePhone.equals("") || !friendEmail.equals("");
+    }
+
+
+    //checks that all inputs are filled, if not user gets Toast to fullfil inputs
+    private boolean isInputCorrect() throws ParseException {
+        getInputsFromEditText();
+        int checkValue=0; //8checks to pass
+        InputCheck input = new InputCheck(this);
 
         //Inputcheck
-        if(input.areInputFieldsFilled(friendName,friendBirthday,friendMobilPhone,friendEmail)){
+        if(input.areInputFieldsFilled(friendName,friendBirthday,friendMobilePhone,friendEmail)){
             Log.d("Inputs filled", "true");
             ++checkValue;
         }
@@ -122,7 +118,7 @@ public class AddFriendsActivity extends AppCompatActivity implements View.OnClic
         }
 
         //Phonecheck
-        if(input.isPhoneNumberValid(friendMobilPhone)){
+        if(input.isPhoneNumberValid(friendMobilePhone)){
             Log.d("Phone number valid", "true");
             mobilePhone.setTextColor(GREEN);
             ++checkValue;
@@ -133,11 +129,10 @@ public class AddFriendsActivity extends AppCompatActivity implements View.OnClic
             mobilePhone.setHintTextColor(RED);
         }
 
-        if(input.isPhoneNumberAlreadyUsed(friendMobilPhone)){
+        if(input.isPhoneNumberAlreadyUsed(friendMobilePhone)){
             mobilePhone.setText("");
             mobilePhone.setHint("Number already used");
             mobilePhone.setHintTextColor(RED);
-            ++checkValue;
         }
         else{
             Log.d("MoNumber already used", "false");
@@ -194,7 +189,7 @@ public class AddFriendsActivity extends AppCompatActivity implements View.OnClic
 
     //adds friend to list
     private void saveFriend(){
-        Friend friend = new Friend(friendName,friendBirthday,friendMobilPhone,friendEmail);
+        Friend friend = new Friend(friendName,friendBirthday,friendMobilePhone,friendEmail);
         updateMainStats();
 
         //add Friend to database with asyncTask
@@ -218,9 +213,8 @@ public class AddFriendsActivity extends AppCompatActivity implements View.OnClic
         }
         editor.apply();
     }
-
     //Asynctasks for database operations
-    @SuppressLint("StaticFieldLeak")
+
     private class AddFriendTask extends AsyncTask<Friend,Void,Boolean>{
 
         @Override

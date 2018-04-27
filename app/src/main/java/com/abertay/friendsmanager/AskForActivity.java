@@ -2,13 +2,10 @@ package com.abertay.friendsmanager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -27,13 +24,12 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-
 import static com.abertay.friendsmanager.MainActivity.SAVED_TOTAL_FRIENDS;
-
+//https://developer.android.com/reference/android/telephony/TelephonyManager
+//https://stackoverflow.com/questions/8701634/send-email-intent
+//Send SMS or Email to friend, also request Permission for SMS
 public class AskForActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageView image;
@@ -73,6 +69,7 @@ public class AskForActivity extends AppCompatActivity implements View.OnClickLis
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentNumber=friendsMobilePhone[position];
@@ -83,6 +80,7 @@ public class AskForActivity extends AppCompatActivity implements View.OnClickLis
                 cursorRight();
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 currentNumber=friendsMobilePhone[0];
@@ -113,6 +111,7 @@ public class AskForActivity extends AppCompatActivity implements View.OnClickLis
             break;
             case R.id.sendEmail:
                 if(isMessageInputAvailable()){
+                    Toast.makeText(this,currentEmail,Toast.LENGTH_LONG).show();
                     sendEmail();
                     finish();
                 }
@@ -130,10 +129,10 @@ public class AskForActivity extends AppCompatActivity implements View.OnClickLis
         Selection.setSelection(etext, endOfText);
     }
 
-        //Check for input of message field
+    //Check for input of message field
     public boolean isMessageInputAvailable(){
         String test = message.getText().toString();
-        if(test.equals("Hello " + currentName + ",")){
+        if(test.equals("Hello " + currentName + ",") || test.equals("")){
             Toast.makeText(this,"Type some letters for your friend", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -142,18 +141,15 @@ public class AskForActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-
-
     //Get friends information, name, email, phone number
     public void getFriendsData(){
-
         SharedPreferences mainStats =getSharedPreferences("mainStats",0);
         localCounter = mainStats.getInt(SAVED_TOTAL_FRIENDS,0);
 
         //allFriendsData=friendsDatabaseHelper.getFriendsData(); possible but not good possibility
 
         try {
-            allFriendsData = new AllFriendsTask().execute().get();
+            allFriendsData = new AllFriendsTask(this).execute().get();
         } catch (InterruptedException e) {
             Toast.makeText(getApplicationContext(),"Data transfer was interrupted: "+e,Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -172,7 +168,6 @@ public class AskForActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-
     //send SMS
     protected void sendSms() {
         String sendTo = currentNumber;
@@ -180,24 +175,26 @@ public class AskForActivity extends AppCompatActivity implements View.OnClickLis
         SmsManager smsManager = SmsManager.getDefault();
         try {
             smsManager.sendTextMessage(sendTo, null, messageSMS, null, null);
-            Toast.makeText(this, "SMS sent to " + sendTo, Toast.LENGTH_LONG).show();
-            //Error handling-Email
+            Toast.makeText(this, "SMS in sending queue to " + sendTo, Toast.LENGTH_LONG).show();
+            //Error handling-SMS
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(),"Error, SMS failed", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
         }
-        // some ErrorHandling better with Toast
+
     }
 
-    //Email
+    //Email https://www.tutorialspoint.com/android/android_sending_email.htm
     protected void sendEmail() {
-        String To = currentEmail;
+        String [] sendTo = new String[1];
+        sendTo[0]=currentEmail;
+        String emailMessage= message.getText().toString();
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setData(Uri.parse(currentEmail));
         emailIntent.setType("text/plain");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, To);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Actvity request");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message goes here");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, sendTo);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Activity request");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, emailMessage);
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
@@ -242,22 +239,4 @@ public class AskForActivity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
     }
-
-    @SuppressLint("StaticFieldLeak")
-    private class AllFriendsTask extends AsyncTask<Void, Void, ArrayList<Friend>>{
-        //https://stackoverflow.com/questions/9170228/android-asynctask-dialog-circle
-        private ArrayList<Friend> friends;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected ArrayList<Friend> doInBackground(Void... voids) {
-            friends = new ArrayList <Friend>(friendsDatabaseHelper.getFriendsData());
-            return friends;
-        }
-    }
-
 }

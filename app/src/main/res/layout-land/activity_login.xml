@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
+        android:contentDescription="@string/friendsmanager_logo"
         android:background="@drawable/logo_land"
         />
 
@@ -25,6 +26,8 @@
         android:layout_above="@id/secretWord"
         android:background="@drawable/oval_style"
         android:gravity="center"
+        android:maxLength="20"
+        android:singleLine="true"
         android:hint="@string/username"
         android:id="@+id/username" />
 
@@ -37,6 +40,8 @@
         android:layout_marginStart="50dp"
         android:background="@drawable/oval_style"
         android:gravity="center"
+        android:maxLength="20"
+        android:singleLine="true"
         android:hint="@string/password"
         android:inputType="textPassword" />
 

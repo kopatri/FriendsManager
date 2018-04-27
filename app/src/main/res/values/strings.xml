@@ -23,4 +23,5 @@
     <string name="delete">delete</string>
     <string name="send_email">send Email</string>
     <string name="contact_information">contact information</string>
+    <string name="friendsmanager_logo">Friendsmanager Logo</string>
 </resources>

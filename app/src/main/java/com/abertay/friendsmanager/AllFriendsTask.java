@@ -3,9 +3,8 @@ package com.abertay.friendsmanager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-
 import java.util.ArrayList;
-
+//Asyntask to get all Friends
 @SuppressLint("StaticFieldLeak")
 public class AllFriendsTask extends AsyncTask<Void, Void, ArrayList<Friend>> {
 

@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Created by Patrick Kornek on 28.02.2018.
  * Based on lecture documents, customized
  */
-
+// handels everything with database
 public class FriendsDatabaseHelper extends SQLiteOpenHelper{
 
     private static final int DB_VERSION=1;

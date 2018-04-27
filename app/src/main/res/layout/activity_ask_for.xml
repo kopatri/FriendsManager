@@ -55,6 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/ask_your_friend_with_n_a_personal_text_message_n_for_an_activity"
+        android:maxLength="320"
         android:gravity="center"
         android:layout_margin="10dp"
         android:layout_below="@id/contactInformation"

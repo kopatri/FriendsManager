@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+// hardcoded Login, landscape orientation possible with no content loss
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText username,password;
@@ -87,6 +88,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         usernameRestored = savedInstanceState.getString("MyUsername");
         passwordRestored = savedInstanceState.getString("MyString");
     }
-
-
 }
